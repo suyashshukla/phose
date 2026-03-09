@@ -4,7 +4,10 @@
       "Bash(npm install:*)",
       "Bash(npx ng build:*)",
       "WebFetch(domain:codiebe.com)",
-      "Bash(ls -la \"c:\\\\Users\\\\suyash.s\\\\source\\\\repos\\\\phose\\\\src\\\\assets\"\" 2>/dev/null || echo \"assets folder not found \")"
+      "Bash(ls -la \"c:\\\\Users\\\\suyash.s\\\\source\\\\repos\\\\phose\\\\src\\\\assets\"\" 2>/dev/null || echo \"assets folder not found \")",
+      "Bash(inkscape --version:*)",
+      "Bash(npx --yes sharp-cli:*)",
+      "Bash(npx sharp-cli:*)"
     ]
   }
 }
