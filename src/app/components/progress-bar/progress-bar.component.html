@@ -1,0 +1,35 @@
+<div class="pb-root" [attr.aria-label]="ariaLabel()" role="status">
+  <!-- Top row -->
+  <div class="pb-header">
+    <div class="pb-status">
+      <span class="pb-pulse" aria-hidden="true"></span>
+      <span class="pb-label">{{ label() }}</span>
+    </div>
+    <span class="pb-count" aria-hidden="true">
+      <strong>{{ current() }}</strong> / {{ total() }}
+    </span>
+  </div>
+
+  <!-- Track -->
+  <div class="pb-track" aria-hidden="true">
+    <div class="pb-fill" [style.width.%]="percentage()">
+      <div class="pb-shine"></div>
+    </div>
+  </div>
+
+  <!-- Bottom row -->
+  <div class="pb-footer">
+    @if (currentFileName()) {
+    <span class="pb-file" aria-live="polite" aria-atomic="true">
+      <svg aria-hidden="true" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        stroke-width="2">
+        <rect x="3" y="3" width="18" height="18" rx="2" />
+        <circle cx="8.5" cy="8.5" r="1.5" />
+        <polyline points="21 15 16 10 5 21" />
+      </svg>
+      {{ currentFileName() }}
+    </span>
+    }
+    <span class="pb-pct" aria-hidden="true">{{ percentage() }}%</span>
+  </div>
+</div>

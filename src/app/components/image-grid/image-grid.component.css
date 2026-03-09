@@ -1,0 +1,143 @@
+.grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 0.875rem;
+}
+
+/* Staggered entrance */
+.grid-item {
+  animation: fade-up 0.4s ease both;
+  animation-delay: calc(var(--i, 0) * 40ms);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.grid-btn {
+  width: 100%;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  display: block;
+  text-align: left;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  transition:
+    border-color 0.18s,
+    transform 0.18s,
+    box-shadow 0.18s;
+}
+.grid-btn:hover {
+  border-color: var(--border-accent);
+  transform: translateY(-3px) scale(1.01);
+  box-shadow:
+    0 8px 28px rgba(0, 0, 0, 0.4),
+    0 0 16px var(--accent-glow);
+}
+.grid-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* Thumbnail */
+.thumb-wrap {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  background: var(--elevated);
+}
+.thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s ease;
+}
+.grid-btn:hover .thumb {
+  transform: scale(1.06);
+}
+
+.thumb-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 40%, rgba(0, 0, 0, 0.7) 100%);
+}
+
+/* Score badge */
+.score-badge {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  padding: 0.2rem 0.45rem;
+  border-radius: 5px;
+  backdrop-filter: blur(6px);
+}
+.score--strong {
+  background: rgba(16, 185, 129, 0.85);
+  color: #fff;
+}
+.score--good {
+  background: rgba(99, 102, 241, 0.85);
+  color: #fff;
+}
+.score--possible {
+  background: rgba(245, 158, 11, 0.85);
+  color: #fff;
+}
+
+/* Footer */
+.card-footer {
+  padding: 0.5rem 0.625rem 0.625rem;
+  background: var(--surface);
+}
+.card-name {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 0.25rem;
+}
+.card-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.25rem;
+}
+.match-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+}
+.match-label.score--strong {
+  background: var(--green-bg);
+  color: var(--green);
+  border: 1px solid var(--green-border);
+}
+.match-label.score--good {
+  background: var(--accent-subtle);
+  color: var(--accent);
+  border: 1px solid var(--border-accent);
+}
+.match-label.score--possible {
+  background: var(--amber-bg);
+  color: var(--amber);
+  border: 1px solid var(--amber-border);
+}
+.card-faces {
+  font-size: 0.65rem;
+  color: var(--text-3);
+}

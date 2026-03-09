@@ -1,0 +1,40 @@
+<div class="fs-header">
+  <h2 class="fs-title">Scan a folder</h2>
+  <p class="fs-desc">Select a local directory — all subdirectories will be scanned recursively.</p>
+</div>
+
+<button class="scan-btn" type="button" [disabled]="!queryEmbedding() || scanning()"
+  [attr.aria-disabled]="!queryEmbedding() || scanning()" (click)="selectAndScan()">
+  @if (scanning()) {
+  <span class="btn-spinner" aria-hidden="true"></span>
+  Scanning…
+  } @else {
+  <svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+  </svg>
+  Select Folder &amp; Search
+  }
+</button>
+
+@if (!queryEmbedding() && !scanning()) {
+<p class="fs-hint" role="status">
+  <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="10" />
+    <line x1="12" y1="8" x2="12" y2="12" />
+    <line x1="12" y1="16" x2="12.01" y2="16" />
+  </svg>
+  Complete step 1 first — upload a query face image.
+</p>
+}
+
+@if (error()) {
+<div class="fs-error" role="alert">
+  <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    style="flex-shrink:0;margin-top:1px">
+    <circle cx="12" cy="12" r="10" />
+    <line x1="12" y1="8" x2="12" y2="12" />
+    <line x1="12" y1="16" x2="12.01" y2="16" />
+  </svg>
+  {{ error() }}
+</div>
+}

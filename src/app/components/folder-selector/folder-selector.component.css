@@ -1,0 +1,101 @@
+.fs-header {
+  margin-bottom: 1.125rem;
+}
+.fs-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 0.2rem;
+}
+.fs-desc {
+  font-size: 0.82rem;
+  color: var(--text-2);
+}
+
+.scan-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  width: 100%;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-sm);
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  background: var(--accent-grad);
+  color: #fff;
+  box-shadow: 0 2px 16px var(--accent-glow);
+  transition: all 0.18s;
+  position: relative;
+  overflow: hidden;
+}
+.scan-btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.12) 50%,
+    transparent 100%
+  );
+  transform: translateX(-100%) skewX(-20deg);
+  transition: transform 0s;
+}
+.scan-btn:hover:not(:disabled)::after {
+  transform: translateX(200%) skewX(-20deg);
+  transition: transform 0.55s ease;
+}
+.scan-btn:hover:not(:disabled) {
+  box-shadow: 0 4px 24px var(--accent-glow);
+  transform: translateY(-1px);
+}
+.scan-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+.scan-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+.scan-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.btn-spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+.fs-hint {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.78rem;
+  color: var(--text-3);
+  margin-top: 0.75rem;
+}
+
+.fs-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  margin-top: 0.875rem;
+  border-radius: var(--radius-sm);
+  background: var(--red-bg);
+  border: 1px solid var(--red-border);
+  color: #fca5a5;
+  font-size: 0.84rem;
+  animation: fade-in 0.2s ease;
+}

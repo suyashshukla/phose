@@ -1,59 +1,100 @@
-# Phose
+# Phose — Local Face Search
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.0.2.
+A fully client-side face search application built with Angular and TensorFlow.js.
+**Images never leave your device.** All face detection and recognition runs entirely in the browser.
 
-## Development server
+---
 
-To start a local development server, run:
+## Quick Start
 
 ```bash
+npm install
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Open **http://localhost:4200** in Chrome or Edge (required for the File System Access API).
 
-## Code scaffolding
+---
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## How It Works
 
-```bash
-ng generate component component-name
+1. **Upload or capture a query image** — must contain exactly one face.
+2. **Select a local folder** — the app recursively scans all subfolders for images.
+3. **Results appear** sorted by similarity — click any result to open a full preview.
+
+Face detection models are served directly from the `@vladmandic/face-api` npm package (no manual download required).
+
+---
+
+## Features
+
+| Feature | Detail |
+|---|---|
+| Face detection | TinyFaceDetector (fast, browser-optimised) |
+| Face recognition | 128-d descriptor via FaceRecognitionNet |
+| Similarity metric | Euclidean distance (threshold 0.55) |
+| Directory traversal | File System Access API — recursive |
+| Supported formats | JPEG, PNG, WebP |
+| Caching | IndexedDB — embeddings cached per file |
+| Privacy | Zero network requests for images |
+| Camera capture | `getUserMedia` — live capture |
+
+---
+
+## Browser Support
+
+| Browser | Supported |
+|---|---|
+| Chrome 86+ | ✅ |
+| Edge 86+ | ✅ |
+| Firefox | ❌ (no `showDirectoryPicker`) |
+| Safari | ❌ (no `showDirectoryPicker`) |
+
+---
+
+## Performance Tips
+
+- First run is slower — models (~6 MB) are loaded once and cached by the browser.
+- Subsequent scans of the same folder are fast — embeddings are cached in IndexedDB.
+- Tested with 1 000+ images without browser crashes (batch size = 10).
+
+---
+
+## Project Structure
+
+```
+src/app/
+  components/
+    query-image/         # Upload or camera-capture the query face
+    folder-selector/     # Directory picker + batch scanner
+    search-results/      # Result grid + lightbox
+    image-grid/          # Thumbnail grid
+    progress-bar/        # Scan progress indicator
+  services/
+    face-detection.ts    # Model loading, face detection
+    face-embedding.ts    # Descriptor extraction, query validation
+    face-search.ts       # Similarity comparison, result ranking
+    file-system.ts       # Directory picker, recursive file walk
+    image-processing.ts  # Image loading utilities
+    cache.ts             # IndexedDB embedding cache
+  models/
+    face-embedding.model.ts
+    search-result.model.ts
+  utils/
+    similarity.ts        # Euclidean distance, cosine similarity
+    image-utils.ts       # File → HTMLImageElement helpers
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+---
 
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
+## Building for Production
 
 ```bash
 ng build
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+Artefacts are written to `dist/phose/browser/`. Serve with any static file server.
 
 ```bash
-ng test
+npx serve dist/phose/browser
 ```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.

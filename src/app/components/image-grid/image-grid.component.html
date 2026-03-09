@@ -1,0 +1,37 @@
+<ul class="grid" role="list" aria-label="Search results">
+  @for (result of results(); track result.filePath; let i = $index) {
+  <li class="grid-item" [style.--i]="i">
+    <button class="grid-btn" type="button"
+      [attr.aria-label]="'View ' + result.fileName + ' — ' + (result.similarity * 100 | number:'1.0-0') + '% match'"
+      (click)="open.emit(result)">
+      <!-- Thumbnail -->
+      <div class="thumb-wrap">
+        <img [src]="result.thumbnailUrl" [alt]="result.fileName" class="thumb" loading="lazy" />
+        <div class="thumb-overlay" aria-hidden="true"></div>
+
+        <!-- Score badge -->
+        <span class="score-badge" [class.score--strong]="result.distance <= 0.35"
+          [class.score--good]="result.distance > 0.35 && result.distance <= 0.45"
+          [class.score--possible]="result.distance > 0.45" aria-hidden="true">
+          {{ result.similarity * 100 | number:'1.0-0' }}%
+        </span>
+      </div>
+
+      <!-- Footer -->
+      <div class="card-footer" aria-hidden="true">
+        <p class="card-name" [title]="result.fileName">{{ result.fileName }}</p>
+        <div class="card-meta">
+          <span class="match-label" [class.score--strong]="result.distance <= 0.35"
+            [class.score--good]="result.distance > 0.35 && result.distance <= 0.45"
+            [class.score--possible]="result.distance > 0.45">
+            @if (result.distance <= 0.35) { Strong } @else if (result.distance <=0.45) { Good } @else { Possible }
+              </span>
+              <span class="card-faces">
+                {{ result.faceCount }} face{{ result.faceCount !== 1 ? 's' : '' }}
+              </span>
+        </div>
+      </div>
+    </button>
+  </li>
+  }
+</ul>

@@ -1,0 +1,117 @@
+<div class="qi-header">
+  <h2 class="qi-title">Choose a face to search for</h2>
+  <p class="qi-desc">Upload or capture a photo containing <strong>exactly one face</strong>.</p>
+</div>
+
+@if (!previewUrl()) {
+<!-- Drop zone -->
+<div class="drop-zone" [class.drop-zone--drag]="dragOver()" role="button" tabindex="0"
+  aria-label="Upload an image — drag and drop or click to browse" (click)="triggerFileInput()"
+  (keydown.enter)="triggerFileInput()" (keydown.space)="$event.preventDefault(); triggerFileInput()"
+  (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)" (drop)="onDrop($event)">
+  <div class="dz-glow" aria-hidden="true"></div>
+
+  <div class="dz-icon" aria-hidden="true">
+    @if (processing()) {
+    <svg class="dz-spin" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+    </svg>
+    } @else if (dragOver()) {
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <polyline points="8 17 12 21 16 17" />
+      <line x1="12" y1="21" x2="12" y2="3" />
+    </svg>
+    } @else {
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <rect x="3" y="3" width="18" height="18" rx="2" />
+      <circle cx="8.5" cy="8.5" r="1.5" />
+      <polyline points="21 15 16 10 5 21" />
+    </svg>
+    }
+  </div>
+
+  @if (processing()) {
+  <p class="dz-title">Detecting face…</p>
+  <p class="dz-sub">Analysing with SSD MobileNet</p>
+  } @else if (dragOver()) {
+  <p class="dz-title">Release to upload</p>
+  } @else {
+  <p class="dz-title">Drag &amp; drop an image here</p>
+  <p class="dz-sub">or <span class="dz-link">click to browse</span> &nbsp;·&nbsp; JPG, PNG, WebP</p>
+  }
+
+  <input #fileInput type="file" accept="image/jpeg,image/png,image/webp" class="sr-only" aria-hidden="true"
+    tabindex="-1" (change)="onFileSelected($event)" />
+</div>
+
+<div class="qi-divider" aria-hidden="true"><span>or</span></div>
+
+@if (!cameraActive()) {
+<button class="cam-btn" type="button" (click)="startCamera()">
+  <svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+    <circle cx="12" cy="13" r="4" />
+  </svg>
+  Use Camera
+</button>
+} @else {
+<div class="camera-wrap">
+  <video #videoEl autoplay playsinline muted class="camera-feed" aria-label="Live camera preview"></video>
+  <canvas #canvasEl class="sr-only" aria-hidden="true"></canvas>
+  <div class="camera-overlay" aria-hidden="true">
+    <div class="face-guide"></div>
+  </div>
+  <div class="camera-actions">
+    <button class="cam-capture" type="button" aria-label="Take photo" (click)="captureFrame()">
+      <span class="cam-shutter" aria-hidden="true"></span>
+    </button>
+    <button class="cam-cancel" type="button" (click)="stopCamera()">Cancel</button>
+  </div>
+</div>
+}
+}
+
+<!-- Preview -->
+@if (previewUrl()) {
+<div class="preview-wrap">
+  <div class="preview-img-wrap">
+    <img [src]="previewUrl()" alt="Query face" class="preview-img" />
+    <div class="preview-check" aria-hidden="true">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round"
+        stroke-linejoin="round">
+        <polyline class="check-path" points="20 6 9 17 4 12" />
+      </svg>
+    </div>
+  </div>
+  <div class="preview-info">
+    <span class="preview-badge">
+      <svg aria-hidden="true" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        stroke-width="2.5">
+        <circle cx="12" cy="7" r="4" />
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+      </svg>
+      Face embedded
+    </span>
+    <button class="change-btn" type="button" (click)="reset()">
+      <svg aria-hidden="true" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        stroke-width="2.5">
+        <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+        <path d="M3 3v5h5" />
+      </svg>
+      Change image
+    </button>
+  </div>
+</div>
+}
+
+@if (error()) {
+<div class="qi-error" role="alert">
+  <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    style="flex-shrink:0;margin-top:2px">
+    <circle cx="12" cy="12" r="10" />
+    <line x1="12" y1="8" x2="12" y2="12" />
+    <line x1="12" y1="16" x2="12.01" y2="16" />
+  </svg>
+  {{ error() }}
+</div>
+}
