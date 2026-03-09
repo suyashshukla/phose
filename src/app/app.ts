@@ -6,7 +6,7 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { DecimalPipe } from '@angular/common';
+import { DecimalPipe, NgOptimizedImage } from '@angular/common';
 import { FaceDetectionService } from './services/face-detection.service';
 import { FaceSearchService } from './services/face-search.service';
 import { FaceEmbedding, ScanProgress } from './models/face-embedding.model';
@@ -22,6 +22,7 @@ import { DISTANCE_THRESHOLD, THRESHOLD_MAX, THRESHOLD_MIN } from './utils/simila
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     DecimalPipe,
+    NgOptimizedImage,
     QueryImageComponent,
     FolderSelectorComponent,
     ProgressBarComponent,
@@ -92,9 +93,9 @@ export class App implements OnDestroy {
     this.runSearch();
   }
 
-  onScanError(msg: string): void {
+  onScanError(message: string): void {
     this.scanning.set(false);
-    this.appError.set(msg);
+    this.appError.set(message);
   }
 
   onResultsCleared(): void {
@@ -112,9 +113,9 @@ export class App implements OnDestroy {
   }
 
   private runSearch(): void {
-    const q = this.queryEmbedding();
-    if (!q) return;
-    const found = this.faceSearch.search(q, this.lastEmbeddings, this.threshold());
+    const query = this.queryEmbedding();
+    if (!query) return;
+    const found = this.faceSearch.search(query, this.lastEmbeddings, this.threshold());
     this.results.set(found);
     this.hasResults.set(true);
   }

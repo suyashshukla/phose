@@ -12,12 +12,12 @@ export class FaceEmbeddingService {
    * Always revokes the object URL when done.
    */
   async getEmbeddingsForFile(file: File): Promise<Float32Array[]> {
-    const { img, url } = await fileToImageElement(file);
+    const { image, objectUrl } = await fileToImageElement(file);
     try {
-      const detections = await this.detection.detectFaces(img);
-      return detections.map((d) => d.descriptor);
+      const detections = await this.detection.detectFaces(image);
+      return detections.map((detection) => detection.descriptor);
     } finally {
-      URL.revokeObjectURL(url);
+      URL.revokeObjectURL(objectUrl);
     }
   }
 
@@ -26,9 +26,9 @@ export class FaceEmbeddingService {
    * Throws if there are 0 or more than 1 face.
    */
   async getQueryEmbedding(
-    img: HTMLImageElement | HTMLCanvasElement,
+    image: HTMLImageElement | HTMLCanvasElement,
   ): Promise<Float32Array> {
-    const detections = await this.detection.detectFaces(img);
+    const detections = await this.detection.detectFaces(image);
 
     if (detections.length === 0) {
       throw new Error('No face detected. Please use an image with exactly one face.');

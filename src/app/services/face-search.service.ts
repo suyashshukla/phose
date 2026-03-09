@@ -41,8 +41,8 @@ export class FaceSearchService {
 
   /** Revoke all object URLs in a results array to free memory. */
   revokeResults(results: SearchResult[]): void {
-    for (const r of results) {
-      URL.revokeObjectURL(r.thumbnailUrl);
+    for (const result of results) {
+      URL.revokeObjectURL(result.thumbnailUrl);
     }
   }
 }

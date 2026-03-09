@@ -135,14 +135,11 @@ body::before {
   display:flex; align-items:center; justify-content:space-between; gap:1rem;
 }
 .brand { display:flex; align-items:center; gap:0.625rem; }
-.brand-icon-wrap {
+.brand-logo {
   width:32px; height:32px; border-radius:8px;
-  background:var(--accent-grad);
-  display:flex; align-items:center; justify-content:center;
   box-shadow:0 0 14px var(--accent-glow);
   flex-shrink:0;
 }
-.brand-icon-wrap svg { color:#fff; }
 .brand-name {
   font-size:1.15rem; font-weight:800; letter-spacing:-0.03em;
   background:var(--accent-grad);

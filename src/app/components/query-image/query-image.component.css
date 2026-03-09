@@ -1,17 +1,17 @@
-.qi-header {
+.query-image-header {
   margin-bottom: 1.125rem;
 }
-.qi-title {
+.query-image-title {
   font-size: 0.95rem;
   font-weight: 700;
   color: var(--text);
   margin-bottom: 0.2rem;
 }
-.qi-desc {
+.query-image-description {
   font-size: 0.82rem;
   color: var(--text-2);
 }
-.qi-desc strong {
+.query-image-description strong {
   color: var(--text);
 }
 
@@ -50,7 +50,7 @@
   box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
 }
 
-.dz-glow {
+.drop-zone-glow {
   position: absolute;
   width: 140px;
   height: 140px;
@@ -61,7 +61,7 @@
   transform: translate(-50%, -50%);
   pointer-events: none;
 }
-.dz-icon {
+.drop-zone-icon {
   width: 52px;
   height: 52px;
   border-radius: 50%;
@@ -75,30 +75,30 @@
   transition: all 0.18s;
   position: relative;
 }
-.drop-zone:hover .dz-icon,
-.drop-zone--drag .dz-icon {
+.drop-zone:hover .drop-zone-icon,
+.drop-zone--drag .drop-zone-icon {
   background: rgba(99, 102, 241, 0.15);
   border-color: var(--accent);
   box-shadow: 0 0 18px var(--accent-glow);
 }
-.dz-spin {
+.drop-zone-spinner {
   animation: spin 0.9s linear infinite;
 }
-.dz-title {
+.drop-zone-title {
   font-size: 0.875rem;
   font-weight: 600;
   color: var(--text);
 }
-.dz-sub {
+.drop-zone-subtitle {
   font-size: 0.76rem;
   color: var(--text-2);
 }
-.dz-link {
+.drop-zone-link {
   color: var(--accent);
   text-decoration: underline;
   text-underline-offset: 2px;
 }
-.sr-only {
+.visually-hidden {
   position: absolute;
   width: 1px;
   height: 1px;
@@ -108,7 +108,7 @@
 }
 
 /* Divider */
-.qi-divider {
+.query-image-divider {
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -116,8 +116,8 @@
   font-size: 0.75rem;
   margin: 0.875rem 0;
 }
-.qi-divider::before,
-.qi-divider::after {
+.query-image-divider::before,
+.query-image-divider::after {
   content: '';
   flex: 1;
   height: 1px;
@@ -125,7 +125,7 @@
 }
 
 /* Camera button */
-.cam-btn {
+.camera-button {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -141,18 +141,18 @@
   cursor: pointer;
   transition: all 0.18s;
 }
-.cam-btn:hover {
+.camera-button:hover {
   background: var(--surface-hover);
   color: var(--text);
   border-color: var(--accent);
 }
-.cam-btn:focus-visible {
+.camera-button:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
 
 /* Camera feed */
-.camera-wrap {
+.camera-wrapper {
   position: relative;
   border-radius: var(--radius);
   overflow: hidden;
@@ -192,7 +192,7 @@
   align-items: center;
   gap: 0.5rem;
 }
-.cam-capture {
+.camera-capture {
   width: 56px;
   height: 56px;
   border-radius: 50%;
@@ -205,15 +205,15 @@
   transition: all 0.15s;
   backdrop-filter: blur(8px);
 }
-.cam-capture:hover {
+.camera-capture:hover {
   background: rgba(255, 255, 255, 0.25);
   transform: scale(1.05);
 }
-.cam-capture:focus-visible {
+.camera-capture:focus-visible {
   outline: 2px solid #fff;
   outline-offset: 2px;
 }
-.cam-shutter {
+.camera-shutter {
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -221,10 +221,10 @@
   display: block;
   transition: transform 0.12s;
 }
-.cam-capture:active .cam-shutter {
+.camera-capture:active .camera-shutter {
   transform: scale(0.82);
 }
-.cam-cancel {
+.camera-cancel {
   background: rgba(0, 0, 0, 0.55);
   border: 1px solid rgba(255, 255, 255, 0.2);
   color: #fff;
@@ -236,26 +236,26 @@
   backdrop-filter: blur(8px);
   transition: background 0.15s;
 }
-.cam-cancel:hover {
+.camera-cancel:hover {
   background: rgba(0, 0, 0, 0.75);
 }
-.cam-cancel:focus-visible {
+.camera-cancel:focus-visible {
   outline: 2px solid #fff;
   outline-offset: 2px;
 }
 
 /* Preview */
-.preview-wrap {
+.preview-wrapper {
   display: flex;
   align-items: center;
   gap: 1.125rem;
   animation: fade-up 0.35s ease;
 }
-.preview-img-wrap {
+.preview-image-wrapper {
   position: relative;
   flex-shrink: 0;
 }
-.preview-img {
+.preview-image {
   width: 80px;
   height: 80px;
   object-fit: cover;
@@ -298,7 +298,7 @@
   padding: 0.28rem 0.75rem;
   border-radius: 20px;
 }
-.change-btn {
+.change-button {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
@@ -311,17 +311,17 @@
   transition: color 0.15s;
   padding: 0;
 }
-.change-btn:hover {
+.change-button:hover {
   color: var(--text-2);
 }
-.change-btn:focus-visible {
+.change-button:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
   border-radius: 3px;
 }
 
 /* Error */
-.qi-error {
+.query-image-error {
   display: flex;
   align-items: flex-start;
   gap: 0.5rem;

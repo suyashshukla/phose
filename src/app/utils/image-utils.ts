@@ -1,29 +1,29 @@
 const SUPPORTED_EXTENSIONS = new Set(['jpg', 'jpeg', 'png', 'webp']);
 
 export function isImageFile(file: File): boolean {
-  const ext = file.name.split('.').pop()?.toLowerCase() ?? '';
-  return SUPPORTED_EXTENSIONS.has(ext);
+  const extension = file.name.split('.').pop()?.toLowerCase() ?? '';
+  return SUPPORTED_EXTENSIONS.has(extension);
 }
 
 export function loadImage(url: string): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
-    const img = new Image();
-    img.onload = () => resolve(img);
-    img.onerror = (e) => reject(e);
-    img.src = url;
+    const imageElement = new Image();
+    imageElement.onload = () => resolve(imageElement);
+    imageElement.onerror = (error) => reject(error);
+    imageElement.src = url;
   });
 }
 
 export async function fileToImageElement(
   file: File,
-): Promise<{ img: HTMLImageElement; url: string }> {
-  const url = URL.createObjectURL(file);
+): Promise<{ image: HTMLImageElement; objectUrl: string }> {
+  const objectUrl = URL.createObjectURL(file);
   try {
-    const img = await loadImage(url);
-    return { img, url };
-  } catch (e) {
-    URL.revokeObjectURL(url);
-    throw e;
+    const image = await loadImage(objectUrl);
+    return { image, objectUrl };
+  } catch (error) {
+    URL.revokeObjectURL(objectUrl);
+    throw error;
   }
 }
 

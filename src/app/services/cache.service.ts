@@ -9,40 +9,40 @@ const MAX_CACHE_AGE_MS = 7 * 24 * 60 * 60 * 1000;
 
 @Injectable({ providedIn: 'root' })
 export class CacheService {
-  private db: IDBDatabase | null = null;
+  private database: IDBDatabase | null = null;
 
-  private async openDb(): Promise<IDBDatabase> {
-    if (this.db) return this.db;
+  private async openDatabase(): Promise<IDBDatabase> {
+    if (this.database) return this.database;
 
     return new Promise((resolve, reject) => {
-      const req = indexedDB.open(DB_NAME, DB_VERSION);
+      const request = indexedDB.open(DB_NAME, DB_VERSION);
 
-      req.onupgradeneeded = (e) => {
-        const db = (e.target as IDBOpenDBRequest).result;
-        if (!db.objectStoreNames.contains(STORE_NAME)) {
-          db.createObjectStore(STORE_NAME, { keyPath: 'filePath' });
+      request.onupgradeneeded = (event) => {
+        const database = (event.target as IDBOpenDBRequest).result;
+        if (!database.objectStoreNames.contains(STORE_NAME)) {
+          database.createObjectStore(STORE_NAME, { keyPath: 'filePath' });
         }
       };
 
-      req.onsuccess = (e) => {
-        this.db = (e.target as IDBOpenDBRequest).result;
-        resolve(this.db);
+      request.onsuccess = (event) => {
+        this.database = (event.target as IDBOpenDBRequest).result;
+        resolve(this.database);
       };
 
-      req.onerror = () => reject(req.error);
+      request.onerror = () => reject(request.error);
     });
   }
 
   async get(filePath: string, file: File): Promise<Float32Array[] | null> {
     try {
-      const db = await this.openDb();
+      const database = await this.openDatabase();
       return new Promise((resolve) => {
-        const tx = db.transaction(STORE_NAME, 'readonly');
-        const store = tx.objectStore(STORE_NAME);
-        const req = store.get(filePath);
+        const transaction = database.transaction(STORE_NAME, 'readonly');
+        const store = transaction.objectStore(STORE_NAME);
+        const request = store.get(filePath);
 
-        req.onsuccess = () => {
-          const entry = req.result as EmbeddingCacheEntry | undefined;
+        request.onsuccess = () => {
+          const entry = request.result as EmbeddingCacheEntry | undefined;
           if (
             !entry ||
             entry.fileSize !== file.size ||
@@ -52,10 +52,10 @@ export class CacheService {
             resolve(null);
             return;
           }
-          resolve(entry.embeddings.map((e) => new Float32Array(e)));
+          resolve(entry.embeddings.map((embedding) => new Float32Array(embedding)));
         };
 
-        req.onerror = () => resolve(null);
+        request.onerror = () => resolve(null);
       });
     } catch {
       return null;
@@ -64,20 +64,20 @@ export class CacheService {
 
   async set(filePath: string, file: File, embeddings: Float32Array[]): Promise<void> {
     try {
-      const db = await this.openDb();
+      const database = await this.openDatabase();
       const entry: EmbeddingCacheEntry = {
         filePath,
         fileSize: file.size,
         fileLastModified: file.lastModified,
-        embeddings: embeddings.map((e) => Array.from(e)),
+        embeddings: embeddings.map((embedding) => Array.from(embedding)),
         timestamp: Date.now(),
       };
 
       return new Promise((resolve) => {
-        const tx = db.transaction(STORE_NAME, 'readwrite');
-        tx.objectStore(STORE_NAME).put(entry);
-        tx.oncomplete = () => resolve();
-        tx.onerror = () => resolve(); // non-fatal
+        const transaction = database.transaction(STORE_NAME, 'readwrite');
+        transaction.objectStore(STORE_NAME).put(entry);
+        transaction.oncomplete = () => resolve();
+        transaction.onerror = () => resolve(); // non-fatal
       });
     } catch {
       // Cache writes are best-effort; ignore failures
@@ -86,12 +86,12 @@ export class CacheService {
 
   async clear(): Promise<void> {
     try {
-      const db = await this.openDb();
+      const database = await this.openDatabase();
       return new Promise((resolve) => {
-        const tx = db.transaction(STORE_NAME, 'readwrite');
-        tx.objectStore(STORE_NAME).clear();
-        tx.oncomplete = () => resolve();
-        tx.onerror = () => resolve();
+        const transaction = database.transaction(STORE_NAME, 'readwrite');
+        transaction.objectStore(STORE_NAME).clear();
+        transaction.oncomplete = () => resolve();
+        transaction.onerror = () => resolve();
       });
     } catch {
       // ignore

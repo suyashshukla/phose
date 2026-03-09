@@ -18,29 +18,29 @@ export class FileSystemService {
    * Calls onProgress with the running count as files are discovered.
    */
   async collectImageFiles(
-    dirHandle: FileSystemDirectoryHandle,
+    directoryHandle: FileSystemDirectoryHandle,
     onProgress?: (count: number) => void,
   ): Promise<File[]> {
     const files: File[] = [];
-    await this.walk(dirHandle, files, onProgress ?? (() => undefined));
+    await this.walk(directoryHandle, files, onProgress ?? (() => undefined));
     return files;
   }
 
   private async walk(
-    dir: FileSystemDirectoryHandle,
-    out: File[],
+    directory: FileSystemDirectoryHandle,
+    collectedFiles: File[],
     onProgress: (count: number) => void,
   ): Promise<void> {
-    for await (const entry of dir.values()) {
+    for await (const entry of directory.values()) {
       if (entry.kind === 'file') {
         const fileHandle = entry as FileSystemFileHandle;
         const file = await fileHandle.getFile();
         if (isImageFile(file)) {
-          out.push(file);
-          onProgress(out.length);
+          collectedFiles.push(file);
+          onProgress(collectedFiles.length);
         }
       } else if (entry.kind === 'directory') {
-        await this.walk(entry as FileSystemDirectoryHandle, out, onProgress);
+        await this.walk(entry as FileSystemDirectoryHandle, collectedFiles, onProgress);
       }
     }
   }

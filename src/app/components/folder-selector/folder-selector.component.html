@@ -1,12 +1,12 @@
-<div class="fs-header">
-  <h2 class="fs-title">Scan a folder</h2>
-  <p class="fs-desc">Select a local directory — all subdirectories will be scanned recursively.</p>
+<div class="folder-selector-header">
+  <h2 class="folder-selector-title">Scan a folder</h2>
+  <p class="folder-selector-description">Select a local directory — all subdirectories will be scanned recursively.</p>
 </div>
 
-<button class="scan-btn" type="button" [disabled]="!queryEmbedding() || scanning()"
+<button class="scan-button" type="button" [disabled]="!queryEmbedding() || scanning()"
   [attr.aria-disabled]="!queryEmbedding() || scanning()" (click)="selectAndScan()">
   @if (scanning()) {
-  <span class="btn-spinner" aria-hidden="true"></span>
+  <span class="button-spinner" aria-hidden="true"></span>
   Scanning…
   } @else {
   <svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -17,7 +17,7 @@
 </button>
 
 @if (!queryEmbedding() && !scanning()) {
-<p class="fs-hint" role="status">
+<p class="folder-selector-hint" role="status">
   <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
     <circle cx="12" cy="12" r="10" />
     <line x1="12" y1="8" x2="12" y2="12" />
@@ -28,7 +28,7 @@
 }
 
 @if (error()) {
-<div class="fs-error" role="alert">
+<div class="folder-selector-error" role="alert">
   <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
     style="flex-shrink:0;margin-top:1px">
     <circle cx="12" cy="12" r="10" />

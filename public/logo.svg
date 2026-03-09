@@ -1,0 +1,40 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="brand" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#6366f1"/>
+      <stop offset="100%" stop-color="#8b5cf6"/>
+    </linearGradient>
+    <linearGradient id="brand-soft" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#818cf8"/>
+      <stop offset="100%" stop-color="#a78bfa"/>
+    </linearGradient>
+    <radialGradient id="orb" cx="25%" cy="18%" r="65%">
+      <stop offset="0%" stop-color="#6366f1" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#6366f1" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="512" height="512" rx="108" fill="#0b0b1a"/>
+  <rect width="512" height="512" rx="108" fill="url(#orb)"/>
+
+  <!-- Corner detection brackets -->
+  <path d="M122 196 L122 146 L172 146" stroke="url(#brand)" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <path d="M340 146 L390 146 L390 196" stroke="url(#brand)" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <path d="M122 316 L122 366 L172 366" stroke="url(#brand)" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <path d="M390 316 L390 366 L340 366" stroke="url(#brand)" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+
+  <!-- Head outline -->
+  <ellipse cx="256" cy="248" rx="88" ry="100" stroke="url(#brand-soft)" stroke-width="5" fill="none" opacity="0.72"/>
+
+  <!-- Left eye -->
+  <circle cx="220" cy="224" r="15" fill="url(#brand)"/>
+  <circle cx="226" cy="219" r="5.5" fill="white" opacity="0.42"/>
+
+  <!-- Right eye -->
+  <circle cx="292" cy="224" r="15" fill="url(#brand)"/>
+  <circle cx="298" cy="219" r="5.5" fill="white" opacity="0.42"/>
+
+  <!-- Mouth -->
+  <path d="M222 278 Q256 306 290 278" stroke="url(#brand-soft)" stroke-width="7" stroke-linecap="round" fill="none"/>
+</svg>

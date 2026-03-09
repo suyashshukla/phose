@@ -26,7 +26,7 @@ export class SearchResultsComponent implements AfterViewInit, OnDestroy {
 
   readonly active = signal<SearchResult | null>(null);
 
-  private readonly lightboxElRef = viewChild<ElementRef<HTMLDivElement>>('lightboxEl');
+  private readonly lightboxElementReference = viewChild<ElementRef<HTMLDivElement>>('lightboxElement');
 
   ngAfterViewInit(): void {
     // Focus the lightbox when it appears so keyboard/screen-reader users can interact
@@ -35,7 +35,7 @@ export class SearchResultsComponent implements AfterViewInit, OnDestroy {
   openLightbox(result: SearchResult): void {
     this.active.set(result);
     // Focus after render
-    setTimeout(() => this.lightboxElRef()?.nativeElement.focus(), 30);
+    setTimeout(() => this.lightboxElementReference()?.nativeElement.focus(), 30);
   }
 
   closeLightbox(): void {

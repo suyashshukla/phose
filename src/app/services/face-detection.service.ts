@@ -23,10 +23,10 @@ export class FaceDetectionService {
       await faceapi.nets.faceLandmark68Net.loadFromUri(modelPath);
       await faceapi.nets.faceRecognitionNet.loadFromUri(modelPath);
       this.modelsLoaded.set(true);
-    } catch (err) {
-      const msg = err instanceof Error ? err.message : String(err);
-      this.modelLoadError.set(`Failed to load face detection models: ${msg}`);
-      throw err;
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      this.modelLoadError.set(`Failed to load face detection models: ${message}`);
+      throw error;
     } finally {
       this.modelsLoading.set(false);
     }
@@ -40,7 +40,7 @@ export class FaceDetectionService {
    *   0.4 is a good balance for group photos.
    */
   async detectFaces(
-    img: HTMLImageElement | HTMLCanvasElement | HTMLVideoElement,
+    image: HTMLImageElement | HTMLCanvasElement | HTMLVideoElement,
     minConfidence = 0.4,
   ): Promise<
     faceapi.WithFaceDescriptor<
@@ -48,12 +48,12 @@ export class FaceDetectionService {
     >[]
   > {
     const options = new faceapi.SsdMobilenetv1Options({ minConfidence, maxResults: 100 });
-    return faceapi.detectAllFaces(img, options).withFaceLandmarks().withFaceDescriptors();
+    return faceapi.detectAllFaces(image, options).withFaceLandmarks().withFaceDescriptors();
   }
 
   /** Detect at most one face — used for query image validation. */
   async detectSingleFace(
-    img: HTMLImageElement | HTMLCanvasElement | HTMLVideoElement,
+    image: HTMLImageElement | HTMLCanvasElement | HTMLVideoElement,
     minConfidence = 0.5,
   ): Promise<
     | faceapi.WithFaceDescriptor<
@@ -62,6 +62,6 @@ export class FaceDetectionService {
     | undefined
   > {
     const options = new faceapi.SsdMobilenetv1Options({ minConfidence, maxResults: 10 });
-    return faceapi.detectSingleFace(img, options).withFaceLandmarks().withFaceDescriptor();
+    return faceapi.detectSingleFace(image, options).withFaceLandmarks().withFaceDescriptor();
   }
 }

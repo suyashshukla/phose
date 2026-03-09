@@ -36,13 +36,13 @@ export class QueryImageComponent implements OnDestroy {
   private stream: MediaStream | null = null;
   private currentPreviewUrl: string | null = null;
 
-  private readonly fileInputRef = viewChild<ElementRef<HTMLInputElement>>('fileInput');
-  private readonly videoElRef = viewChild<ElementRef<HTMLVideoElement>>('videoEl');
-  private readonly canvasElRef = viewChild<ElementRef<HTMLCanvasElement>>('canvasEl');
+  private readonly fileInputElementReference = viewChild<ElementRef<HTMLInputElement>>('fileInputElement');
+  private readonly videoElementReference = viewChild<ElementRef<HTMLVideoElement>>('videoElement');
+  private readonly canvasElementReference = viewChild<ElementRef<HTMLCanvasElement>>('canvasElement');
 
   triggerFileInput(): void {
     if (this.previewUrl()) return;
-    this.fileInputRef()?.nativeElement.click();
+    this.fileInputElementReference()?.nativeElement.click();
   }
 
   onDragOver(event: DragEvent): void {
@@ -78,7 +78,7 @@ export class QueryImageComponent implements OnDestroy {
       this.stream = await navigator.mediaDevices.getUserMedia({ video: true });
       this.cameraActive.set(true);
       setTimeout(() => {
-        const video = this.videoElRef()?.nativeElement;
+        const video = this.videoElementReference()?.nativeElement;
         if (video && this.stream) video.srcObject = this.stream;
       }, 50);
     } catch {
@@ -87,8 +87,8 @@ export class QueryImageComponent implements OnDestroy {
   }
 
   async captureFrame(): Promise<void> {
-    const video = this.videoElRef()?.nativeElement;
-    const canvas = this.canvasElRef()?.nativeElement;
+    const video = this.videoElementReference()?.nativeElement;
+    const canvas = this.canvasElementReference()?.nativeElement;
     if (!video || !canvas) return;
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
@@ -103,7 +103,7 @@ export class QueryImageComponent implements OnDestroy {
   }
 
   stopCamera(): void {
-    this.stream?.getTracks().forEach((t) => t.stop());
+    this.stream?.getTracks().forEach((track) => track.stop());
     this.stream = null;
     this.cameraActive.set(false);
   }
@@ -120,22 +120,22 @@ export class QueryImageComponent implements OnDestroy {
   private async processFile(file: File): Promise<void> {
     this.error.set(null);
     this.processing.set(true);
-    const url = URL.createObjectURL(file);
-    const img = await new Promise<HTMLImageElement>((res, rej) => {
-      const i = new Image();
-      i.onload = () => res(i);
-      i.onerror = rej;
-      i.src = url;
+    const objectUrl = URL.createObjectURL(file);
+    const image = await new Promise<HTMLImageElement>((resolve, reject) => {
+      const imageElement = new Image();
+      imageElement.onload = () => resolve(imageElement);
+      imageElement.onerror = reject;
+      imageElement.src = objectUrl;
     });
     try {
-      const embedding = await this.embeddingService.getQueryEmbedding(img);
+      const embedding = await this.embeddingService.getQueryEmbedding(image);
       if (this.currentPreviewUrl) URL.revokeObjectURL(this.currentPreviewUrl);
-      this.currentPreviewUrl = url;
-      this.previewUrl.set(url);
-      this.queryReady.emit({ file, previewUrl: url, embedding });
-    } catch (e) {
-      URL.revokeObjectURL(url);
-      this.error.set(e instanceof Error ? e.message : 'Failed to process image.');
+      this.currentPreviewUrl = objectUrl;
+      this.previewUrl.set(objectUrl);
+      this.queryReady.emit({ file, previewUrl: objectUrl, embedding });
+    } catch (error) {
+      URL.revokeObjectURL(objectUrl);
+      this.error.set(error instanceof Error ? error.message : 'Failed to process image.');
     } finally {
       this.processing.set(false);
     }

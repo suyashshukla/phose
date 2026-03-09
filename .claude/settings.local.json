@@ -2,7 +2,9 @@
   "permissions": {
     "allow": [
       "Bash(npm install:*)",
-      "Bash(npx ng build:*)"
+      "Bash(npx ng build:*)",
+      "WebFetch(domain:codiebe.com)",
+      "Bash(ls -la \"c:\\\\Users\\\\suyash.s\\\\source\\\\repos\\\\phose\\\\src\\\\assets\"\" 2>/dev/null || echo \"assets folder not found \")"
     ]
   }
 }

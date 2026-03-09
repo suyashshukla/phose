@@ -1,23 +1,23 @@
 /** Euclidean distance between two 128-d face descriptors (lower = more similar). */
 export function euclideanDistance(a: Float32Array, b: Float32Array): number {
   let sum = 0;
-  for (let i = 0; i < a.length; i++) {
-    const diff = a[i] - b[i];
-    sum += diff * diff;
+  for (let index = 0; index < a.length; index++) {
+    const difference = a[index] - b[index];
+    sum += difference * difference;
   }
   return Math.sqrt(sum);
 }
 
 /** Cosine similarity (0–1, higher = more similar). */
 export function cosineSimilarity(a: Float32Array, b: Float32Array): number {
-  let dot = 0, normA = 0, normB = 0;
-  for (let i = 0; i < a.length; i++) {
-    dot += a[i] * b[i];
-    normA += a[i] * a[i];
-    normB += b[i] * b[i];
+  let dotProduct = 0, normSquaredA = 0, normSquaredB = 0;
+  for (let index = 0; index < a.length; index++) {
+    dotProduct += a[index] * b[index];
+    normSquaredA += a[index] * a[index];
+    normSquaredB += b[index] * b[index];
   }
-  if (normA === 0 || normB === 0) return 0;
-  return dot / (Math.sqrt(normA) * Math.sqrt(normB));
+  if (normSquaredA === 0 || normSquaredB === 0) return 0;
+  return dotProduct / (Math.sqrt(normSquaredA) * Math.sqrt(normSquaredB));
 }
 
 /**
@@ -33,7 +33,7 @@ export function distanceToSimilarity(distance: number): number {
  * and any face in the target image.
  */
 export function bestDistance(query: Float32Array, targets: Float32Array[]): number {
-  return targets.reduce((best, t) => Math.min(best, euclideanDistance(query, t)), Infinity);
+  return targets.reduce((best, target) => Math.min(best, euclideanDistance(query, target)), Infinity);
 }
 
 /**

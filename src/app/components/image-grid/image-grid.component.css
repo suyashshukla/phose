@@ -15,7 +15,7 @@
   overflow: hidden;
 }
 
-.grid-btn {
+.grid-button {
   width: 100%;
   padding: 0;
   border: none;
@@ -32,38 +32,38 @@
     transform 0.18s,
     box-shadow 0.18s;
 }
-.grid-btn:hover {
+.grid-button:hover {
   border-color: var(--border-accent);
   transform: translateY(-3px) scale(1.01);
   box-shadow:
     0 8px 28px rgba(0, 0, 0, 0.4),
     0 0 16px var(--accent-glow);
 }
-.grid-btn:focus-visible {
+.grid-button:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
   border-radius: var(--radius-sm);
 }
 
 /* Thumbnail */
-.thumb-wrap {
+.thumbnail-wrapper {
   position: relative;
   aspect-ratio: 1;
   overflow: hidden;
   background: var(--elevated);
 }
-.thumb {
+.thumbnail {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
   transition: transform 0.3s ease;
 }
-.grid-btn:hover .thumb {
+.grid-button:hover .thumbnail {
   transform: scale(1.06);
 }
 
-.thumb-overlay {
+.thumbnail-overlay {
   position: absolute;
   inset: 0;
   background: linear-gradient(to bottom, transparent 40%, rgba(0, 0, 0, 0.7) 100%);

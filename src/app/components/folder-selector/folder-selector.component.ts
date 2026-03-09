@@ -13,7 +13,7 @@ const BATCH_SIZE = 10;
   styleUrl: './folder-selector.component.css',
 })
 export class FolderSelectorComponent {
-  private readonly fs = inject(FileSystemService);
+  private readonly fileSystemService = inject(FileSystemService);
   private readonly embeddingService = inject(FaceEmbeddingService);
   private readonly cache = inject(CacheService);
 
@@ -31,12 +31,12 @@ export class FolderSelectorComponent {
     if (!this.queryEmbedding() || this.scanning()) return;
 
     this.error.set(null);
-    let dirHandle: FileSystemDirectoryHandle;
+    let directoryHandle: FileSystemDirectoryHandle;
 
     try {
-      dirHandle = await this.fs.pickDirectory();
-    } catch (e) {
-      if ((e as DOMException).name !== 'AbortError') {
+      directoryHandle = await this.fileSystemService.pickDirectory();
+    } catch (error) {
+      if ((error as DOMException).name !== 'AbortError') {
         this.error.set('Could not access the directory. Please try again.');
       }
       return;
@@ -46,15 +46,15 @@ export class FolderSelectorComponent {
     this.scanStarted.emit();
 
     try {
-      const files = await this.fs.collectImageFiles(dirHandle, (count) => {
+      const files = await this.fileSystemService.collectImageFiles(directoryHandle, (count) => {
         this.progressUpdate.emit({ current: 0, total: count, currentFileName: 'Discovering files…' });
       });
 
       const total = files.length;
       const results: FaceEmbedding[] = [];
 
-      for (let i = 0; i < files.length; i += BATCH_SIZE) {
-        const batch = files.slice(i, i + BATCH_SIZE);
+      for (let batchStart = 0; batchStart < files.length; batchStart += BATCH_SIZE) {
+        const batch = files.slice(batchStart, batchStart + BATCH_SIZE);
 
         await Promise.all(
           batch.map(async (file) => {
@@ -69,19 +69,19 @@ export class FolderSelectorComponent {
         );
 
         this.progressUpdate.emit({
-          current: Math.min(i + BATCH_SIZE, total),
+          current: Math.min(batchStart + BATCH_SIZE, total),
           total,
           currentFileName: batch[batch.length - 1].name,
         });
 
-        await new Promise((r) => setTimeout(r, 0));
+        await new Promise((resolve) => setTimeout(resolve, 0));
       }
 
       this.scanComplete.emit(results);
-    } catch (e) {
-      const msg = e instanceof Error ? e.message : 'Scan failed. Please try again.';
-      this.error.set(msg);
-      this.scanError.emit(msg);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Scan failed. Please try again.';
+      this.error.set(message);
+      this.scanError.emit(message);
     } finally {
       this.scanning.set(false);
     }
