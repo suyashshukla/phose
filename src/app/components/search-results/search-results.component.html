@@ -1,27 +1,53 @@
-<!-- ── Header ── -->
-<div class="search-results-header">
-  <div class="search-results-title-row">
-    <h2 class="search-results-title">Results</h2>
-    <span
-      class="search-results-count"
-      [class.search-results-count--none]="results().length === 0"
-      aria-live="polite"
-    >
-      {{ results().length }} match{{ results().length !== 1 ? 'es' : '' }}
-    </span>
-  </div>
+<!-- ── Toolbar ── -->
+@if (results().length > 0) {
+  <div class="results-toolbar">
+    <!-- Filter tabs -->
+    <div class="filter-tabs" role="group" aria-label="Filter results by match quality">
+      <button class="filter-tab"
+        [class.filter-tab--active]="filterMode() === 'all'"
+        (click)="filterMode.set('all')" type="button">
+        All
+        <span class="filter-count">{{ results().length }}</span>
+      </button>
+      <button class="filter-tab filter-tab--strong"
+        [class.filter-tab--active]="filterMode() === 'strong'"
+        (click)="filterMode.set('strong')" type="button">
+        Strong
+        <span class="filter-count">{{ strongCount() }}</span>
+      </button>
+      <button class="filter-tab filter-tab--good"
+        [class.filter-tab--active]="filterMode() === 'good'"
+        (click)="filterMode.set('good')" type="button">
+        Good
+        <span class="filter-count">{{ goodCount() }}</span>
+      </button>
+      <button class="filter-tab filter-tab--possible"
+        [class.filter-tab--active]="filterMode() === 'possible'"
+        (click)="filterMode.set('possible')" type="button">
+        Possible
+        <span class="filter-count">{{ possibleCount() }}</span>
+      </button>
+    </div>
 
-  <div class="search-results-actions">
-    @if (results().length > 0) {
-      <button class="search-results-clear" type="button" (click)="cleared.emit()">
-        <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+    <!-- Actions -->
+    <div class="toolbar-actions">
+      <select
+        class="sort-select"
+        aria-label="Sort results"
+        [value]="sortMode()"
+        (change)="sortMode.set($any($event.target).value)">
+        <option value="similarity">Best match</option>
+        <option value="filename">Filename A–Z</option>
+      </select>
+      <button class="toolbar-clear" type="button" (click)="cleared.emit()">
+        <svg aria-hidden="true" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
         </svg>
         Clear
       </button>
-    }
+    </div>
   </div>
-</div>
+}
 
 <!-- ── Empty state ── -->
 @if (results().length === 0) {
@@ -34,8 +60,20 @@
     <p class="empty-title">No matches found</p>
     <p class="empty-subtitle">Try loosening the match sensitivity slider or use a clearer query image.</p>
   </div>
+} @else if (filteredResults().length === 0) {
+  <div class="search-results-empty" role="status">
+    <div class="empty-icon" aria-hidden="true">
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+    </div>
+    <p class="empty-title">No {{ filterMode() }} matches</p>
+    <p class="empty-subtitle">
+      <button class="empty-reset" type="button" (click)="filterMode.set('all')">Show all {{ results().length }} matches</button>
+    </p>
+  </div>
 } @else {
-  <app-image-grid [results]="results()" (open)="openLightbox($event)" />
+  <app-image-grid [results]="filteredResults()" (open)="openLightbox($event)" />
 }
 
 <!-- ── Lightbox ── -->
@@ -61,11 +99,7 @@
 
       <!-- Image -->
       <div class="lightbox-image-wrapper">
-        <img
-          [src]="active()!.thumbnailUrl"
-          [alt]="active()!.fileName"
-          class="lightbox-image"
-        />
+        <img [src]="active()!.thumbnailUrl" [alt]="active()!.fileName" class="lightbox-image" />
       </div>
 
       <!-- Meta bar -->

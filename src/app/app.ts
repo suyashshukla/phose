@@ -46,6 +46,9 @@ export class App implements OnDestroy {
   readonly threshold = signal(DISTANCE_THRESHOLD);
   readonly thresholdMin = THRESHOLD_MIN;
   readonly thresholdMax = THRESHOLD_MAX;
+  readonly scanDuration = signal<number | null>(null);
+
+  private scanStartTime = 0;
 
   /** Step state helpers for the numbered step UI */
   readonly step1State = computed<'idle' | 'active' | 'done'>(() =>
@@ -76,6 +79,8 @@ export class App implements OnDestroy {
 
   onScanStarted(): void {
     this.scanning.set(true);
+    this.scanStartTime = performance.now();
+    this.scanDuration.set(null);
     this.clearResultsInternal();
     this.hasScanData.set(false);
     this.lastEmbeddings = [];
@@ -88,6 +93,7 @@ export class App implements OnDestroy {
 
   onScanComplete(embeddings: FaceEmbedding[]): void {
     this.scanning.set(false);
+    this.scanDuration.set(performance.now() - this.scanStartTime);
     this.lastEmbeddings = embeddings;
     this.hasScanData.set(true);
     this.runSearch();

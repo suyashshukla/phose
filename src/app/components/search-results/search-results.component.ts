@@ -4,6 +4,7 @@ import {
   Component,
   ElementRef,
   OnDestroy,
+  computed,
   input,
   output,
   signal,
@@ -25,6 +26,25 @@ export class SearchResultsComponent implements AfterViewInit, OnDestroy {
   readonly cleared = output<void>();
 
   readonly active = signal<SearchResult | null>(null);
+  readonly filterMode = signal<'all' | 'strong' | 'good' | 'possible'>('all');
+  readonly sortMode = signal<'similarity' | 'filename'>('similarity');
+
+  readonly strongCount  = computed(() => this.results().filter(r => r.distance <= 0.35).length);
+  readonly goodCount    = computed(() => this.results().filter(r => r.distance > 0.35 && r.distance <= 0.45).length);
+  readonly possibleCount = computed(() => this.results().filter(r => r.distance > 0.45).length);
+
+  readonly filteredResults = computed(() => {
+    const all = this.results();
+    const filter = this.filterMode();
+    const sort = this.sortMode();
+    let filtered: SearchResult[];
+    if (filter === 'strong')   filtered = all.filter(r => r.distance <= 0.35);
+    else if (filter === 'good') filtered = all.filter(r => r.distance > 0.35 && r.distance <= 0.45);
+    else if (filter === 'possible') filtered = all.filter(r => r.distance > 0.45);
+    else filtered = all;
+    if (sort === 'filename') return [...filtered].sort((a, b) => a.fileName.localeCompare(b.fileName));
+    return filtered;
+  });
 
   private readonly lightboxElementReference = viewChild<ElementRef<HTMLDivElement>>('lightboxElement');
 
