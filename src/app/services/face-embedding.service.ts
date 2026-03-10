@@ -14,8 +14,7 @@ export class FaceEmbeddingService {
   async getEmbeddingsForFile(file: File): Promise<Float32Array[]> {
     const { image, objectUrl } = await fileToImageElement(file);
     try {
-      const detections = await this.detection.detectFaces(image);
-      return detections.map((detection) => detection.descriptor);
+      return await this.detection.detectFaces(image);
     } finally {
       URL.revokeObjectURL(objectUrl);
     }
@@ -23,22 +22,22 @@ export class FaceEmbeddingService {
 
   /**
    * Returns the single face embedding for a query image.
-   * Throws if there are 0 or more than 1 face.
+   * Throws if there are 0 or more than 1 face detected.
    */
   async getQueryEmbedding(
     image: HTMLImageElement | HTMLCanvasElement,
   ): Promise<Float32Array> {
-    const detections = await this.detection.detectFaces(image);
+    const embeddings = await this.detection.detectFaces(image);
 
-    if (detections.length === 0) {
+    if (embeddings.length === 0) {
       throw new Error('No face detected. Please use an image with exactly one face.');
     }
-    if (detections.length > 1) {
+    if (embeddings.length > 1) {
       throw new Error(
-        `${detections.length} faces detected. Please upload an image containing exactly one face.`,
+        `${embeddings.length} faces detected. Please upload an image containing exactly one face.`,
       );
     }
 
-    return detections[0].descriptor;
+    return embeddings[0];
   }
 }

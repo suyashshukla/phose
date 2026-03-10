@@ -3,7 +3,8 @@ import { EmbeddingCacheEntry } from '../models/face-embedding.model';
 
 const DB_NAME = 'phose-face-cache';
 const STORE_NAME = 'embeddings';
-const DB_VERSION = 1;
+// Bump version when cache schema or key format changes to clear stale entries.
+const DB_VERSION = 2;
 /** Cache entries older than 7 days are considered stale. */
 const MAX_CACHE_AGE_MS = 7 * 24 * 60 * 60 * 1000;
 

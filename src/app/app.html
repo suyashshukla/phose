@@ -25,7 +25,12 @@
         } @else {
           <span class="header-model-status header-model-status--ready">
             <span class="header-model-dot" aria-hidden="true"></span>
-            SSD MobileNet v1 · ready
+            @switch (detection.selectedMethod()) {
+              @case (DetectionMethods.FaceApiSsd) { SSD MobileNet v1 }
+              @case (DetectionMethods.FaceApiTiny) { Tiny Face Detector }
+              @case (DetectionMethods.MediaPipe) { MediaPipe BlazeFace }
+            }
+            · ready
           </span>
         }
       </div>
@@ -93,6 +98,7 @@
             (progressUpdate)="onProgressUpdate($event)"
             (scanComplete)="onScanComplete($event)"
             (scanError)="onScanError($event)"
+            (methodChanged)="onDetectionMethodChanged()"
           />
 
           @if (scanning()) {

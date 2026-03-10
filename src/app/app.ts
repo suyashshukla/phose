@@ -16,6 +16,7 @@ import { FolderSelectorComponent } from './components/folder-selector/folder-sel
 import { ProgressBarComponent } from './components/progress-bar/progress-bar.component';
 import { SearchResultsComponent } from './components/search-results/search-results.component';
 import { DISTANCE_THRESHOLD, THRESHOLD_MAX, THRESHOLD_MIN } from './utils/similarity';
+import { DetectionMethods } from './services/detection-backend';
 
 @Component({
   selector: 'app-root',
@@ -63,6 +64,9 @@ export class App implements OnDestroy {
     return this.hasResults() ? 'active' : 'idle';
   });
 
+  /** Exposed for template — allows @switch @case to reference constants without literals. */
+  readonly DetectionMethods = DetectionMethods;
+
   private lastEmbeddings: FaceEmbedding[] = [];
 
   constructor() {
@@ -102,6 +106,14 @@ export class App implements OnDestroy {
   onScanError(message: string): void {
     this.scanning.set(false);
     this.appError.set(message);
+  }
+
+  onDetectionMethodChanged(): void {
+    // Clear existing scan data — embeddings from different backends are incompatible.
+    this.clearResultsInternal();
+    this.hasScanData.set(false);
+    this.lastEmbeddings = [];
+    this.scanDuration.set(null);
   }
 
   onResultsCleared(): void {

@@ -1,6 +1,133 @@
 .folder-selector-header {
   margin-bottom: 1.125rem;
 }
+
+/* ── Detection method selector ── */
+.method-fieldset {
+  border: none;
+  padding: 0;
+  margin: 0 0 1rem;
+}
+.method-fieldset:disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+.method-legend {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-3);
+  margin-bottom: 0.5rem;
+}
+.method-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+.method-radio {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.method-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.625rem;
+  padding: 0.625rem 0.75rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--elevated);
+  cursor: pointer;
+  transition:
+    border-color 0.15s,
+    background 0.15s;
+  user-select: none;
+}
+.method-option:hover:not(.method-option--disabled) {
+  border-color: var(--border-strong);
+  background: var(--surface);
+}
+.method-option--active {
+  border-color: var(--accent) !important;
+  background: var(--accent-subtle) !important;
+}
+.method-option--disabled {
+  cursor: not-allowed;
+}
+
+.method-option-body {
+  flex: 1;
+  min-width: 0;
+}
+.method-option-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.2rem;
+}
+.method-option-label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text);
+}
+.method-option--active .method-option-label {
+  color: var(--accent);
+}
+.method-option-desc {
+  font-size: 0.74rem;
+  color: var(--text-3);
+  line-height: 1.4;
+}
+.method-option-note {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.7rem;
+  color: var(--amber);
+  margin-top: 0.25rem;
+}
+
+.method-badge {
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+  background: var(--elevated);
+  border: 1px solid var(--border);
+  color: var(--text-3);
+  flex-shrink: 0;
+}
+.method-badge--fast {
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  border-color: color-mix(in srgb, var(--accent) 30%, transparent);
+  color: var(--accent);
+}
+.method-badge--fastest {
+  background: color-mix(in srgb, var(--green) 12%, transparent);
+  border-color: color-mix(in srgb, var(--green) 30%, transparent);
+  color: var(--green);
+}
+
+.retry-link {
+  background: none;
+  border: none;
+  color: var(--accent);
+  font-size: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  margin-left: 0.25rem;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.retry-link:hover {
+  color: var(--accent-2);
+}
 .folder-selector-title {
   font-size: 0.95rem;
   font-weight: 700;

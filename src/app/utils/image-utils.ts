@@ -27,6 +27,26 @@ export async function fileToImageElement(
   }
 }
 
+/**
+ * Returns the original image if its largest dimension is ≤ maxDimension,
+ * otherwise returns a downscaled canvas. Reduces inference time on high-res
+ * photos with no accuracy loss for face detection.
+ */
+export function prepareImageForInference(
+  image: HTMLImageElement | HTMLCanvasElement,
+  maxDimension = 640,
+): HTMLImageElement | HTMLCanvasElement {
+  const width = image instanceof HTMLImageElement ? image.naturalWidth : image.width;
+  const height = image instanceof HTMLImageElement ? image.naturalHeight : image.height;
+  const scale = Math.min(1, maxDimension / Math.max(width, height, 1));
+  if (scale >= 1) return image;
+  const canvas = document.createElement('canvas');
+  canvas.width = Math.round(width * scale);
+  canvas.height = Math.round(height * scale);
+  canvas.getContext('2d')!.drawImage(image, 0, 0, canvas.width, canvas.height);
+  return canvas;
+}
+
 /** Draw a canvas frame to a Blob, then wrap it as a File. */
 export function canvasToFile(canvas: HTMLCanvasElement, fileName = 'capture.jpg'): Promise<File> {
   return new Promise((resolve, reject) => {

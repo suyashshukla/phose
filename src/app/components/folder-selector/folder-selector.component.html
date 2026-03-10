@@ -3,38 +3,99 @@
   <p class="folder-selector-description">Select a local directory — all subdirectories will be scanned recursively.</p>
 </div>
 
-<button class="scan-button" type="button" [disabled]="!queryEmbedding() || scanning()"
-  [attr.aria-disabled]="!queryEmbedding() || scanning()" (click)="selectAndScan()">
+<!-- ── Detection method selector ── -->
+<fieldset class="method-fieldset" [disabled]="scanning()">
+  <legend class="method-legend">Detection method</legend>
+  <div class="method-options" role="radiogroup" aria-label="Detection method">
+    @for (option of backendOptions; track option.method) {
+      <label
+        class="method-option"
+        [class.method-option--active]="detection.selectedMethod() === option.method"
+        [class.method-option--disabled]="scanning()">
+        <input
+          type="radio"
+          class="method-radio"
+          name="detection-method"
+          [value]="option.method"
+          [checked]="detection.selectedMethod() === option.method"
+          [disabled]="scanning()"
+          (change)="onMethodChange(option.method)"
+        />
+        <div class="method-option-body">
+          <div class="method-option-header">
+            <span class="method-option-label">{{ option.label }}</span>
+            <span
+              class="method-badge"
+              [class.method-badge--fast]="option.badgeVariant === 'fast'"
+              [class.method-badge--fastest]="option.badgeVariant === 'fastest'">
+              {{ option.badge }}
+            </span>
+          </div>
+          <p class="method-option-desc">{{ option.description }}</p>
+          @if (option.note) {
+            <p class="method-option-note">
+              <svg aria-hidden="true" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+              </svg>
+              {{ option.note }}
+            </p>
+          }
+        </div>
+      </label>
+    }
+  </div>
+</fieldset>
+
+<!-- Model loading state for current method -->
+@if (detection.modelsLoading()) {
+  <p class="folder-selector-hint" role="status" aria-live="polite">
+    <span class="spinner spinner--sm" aria-hidden="true"></span>
+    Loading models…
+  </p>
+} @else if (detection.modelLoadError()) {
+  <div class="folder-selector-error" role="alert">
+    <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:1px">
+      <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+    </svg>
+    {{ detection.modelLoadError() }}
+    <button class="retry-link" type="button" (click)="detection.loadModels()">Retry</button>
+  </div>
+}
+
+<button class="scan-button" type="button"
+  [disabled]="!queryEmbedding() || scanning() || detection.modelsLoading()"
+  [attr.aria-disabled]="!queryEmbedding() || scanning() || detection.modelsLoading()"
+  (click)="selectAndScan()">
   @if (scanning()) {
-  <span class="button-spinner" aria-hidden="true"></span>
-  Scanning…
+    <span class="button-spinner" aria-hidden="true"></span>
+    Scanning…
   } @else {
-  <svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
-  </svg>
-  Select Folder &amp; Search
+    <svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+    </svg>
+    Select Folder &amp; Search
   }
 </button>
 
 @if (!queryEmbedding() && !scanning()) {
-<p class="folder-selector-hint" role="status">
-  <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-    <circle cx="12" cy="12" r="10" />
-    <line x1="12" y1="8" x2="12" y2="12" />
-    <line x1="12" y1="16" x2="12.01" y2="16" />
-  </svg>
-  Complete step 1 first — upload a query face image.
-</p>
+  <p class="folder-selector-hint" role="status">
+    <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="12" cy="12" r="10" />
+      <line x1="12" y1="8" x2="12" y2="12" />
+      <line x1="12" y1="16" x2="12.01" y2="16" />
+    </svg>
+    Complete step 1 first — upload a query face image.
+  </p>
 }
 
 @if (error()) {
-<div class="folder-selector-error" role="alert">
-  <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-    style="flex-shrink:0;margin-top:1px">
-    <circle cx="12" cy="12" r="10" />
-    <line x1="12" y1="8" x2="12" y2="12" />
-    <line x1="12" y1="16" x2="12.01" y2="16" />
-  </svg>
-  {{ error() }}
-</div>
+  <div class="folder-selector-error" role="alert">
+    <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+      style="flex-shrink:0;margin-top:1px">
+      <circle cx="12" cy="12" r="10" />
+      <line x1="12" y1="8" x2="12" y2="12" />
+      <line x1="12" y1="16" x2="12.01" y2="16" />
+    </svg>
+    {{ error() }}
+  </div>
 }
